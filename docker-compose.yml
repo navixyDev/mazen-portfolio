@@ -1,0 +1,19 @@
+services:
+  portfolio:
+    build: .
+    ports:
+      - "8080:3000"
+    container_name: portfolio
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portfolio.rule=Host(`mazen.theopendev.com`)"
+      - "traefik.http.routers.portfolio.entrypoints=websecure"
+      - "traefik.http.routers.portfolio.tls.certresolver=myresolver"
+      - "traefik.http.services.portfolio.loadbalancer.server.port=3000"
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
