@@ -48,13 +48,13 @@ jobs:
             docker network ls | grep -q web || docker network create web
 
             echo "==> Stopping previous containers (if any)"
-            docker compose down || true
+            docker-compose down || true
 
             echo "==> Building and deploying new version"
-            docker compose up -d --build
+            docker-compose up -d --build
 
             echo "==> Listing running containers"
-            docker compose ps
+            docker-compose ps
 
             echo "==> Cleaning up unused images"
             docker image prune -af
