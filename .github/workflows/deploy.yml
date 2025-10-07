@@ -25,7 +25,7 @@ jobs:
             set -e
 
             APP_DIR="/home/deploy/portfolio"
-            REPO_URL="git@github.com:TheOpenDev/portfolio.git"
+            REPO_URL="git@github.com:navixyDev/mazen-portfolio.git"
 
             echo "==> Ensuring $APP_DIR exists"
             if [ ! -d "$APP_DIR" ]; then
