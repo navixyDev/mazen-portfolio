@@ -1,16 +1,35 @@
+version: "3.8"
+
 services:
   portfolio:
     build: .
     container_name: portfolio
-    restart: always
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.portfolio.rule=Host(`mazen.theopendev.com`)"
-      - "traefik.http.routers.portfolio.entrypoints=websecure"
-      - "traefik.http.routers.portfolio.tls.certresolver=myresolver"
-      - "traefik.http.services.portfolio.loadbalancer.server.port=3000"
+    restart: unless-stopped
     networks:
       - web
+    environment:
+      - NODE_ENV=production
+
+    labels:
+      - "traefik.enable=true"
+
+      # HTTPS Router for your portfolio
+      - "traefik.http.routers.portfolio.entrypoints=websecure"
+      - "traefik.http.routers.portfolio.rule=Host(`mazen.theopendev.com`)"
+      - "traefik.http.routers.portfolio.tls=true"
+      - "traefik.http.routers.portfolio.tls.certresolver=letsencrypt"
+
+      # Service definition for Traefik
+      - "traefik.http.services.portfolio.loadbalancer.server.port=3000"
+
+      # for HTTP->HTTPS redirect
+      - "traefik.http.routers.portfolio-insecure.entrypoints=web"
+      - "traefik.http.routers.portfolio-insecure.rule=Host(`mazen.theopendev.com`)"
+      - "traefik.http.middlewares.portfolio-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.portfolio-insecure.middlewares=portfolio-redirect"
+
+      # Docker network for routing
+      - "traefik.docker.network=web"
 
 networks:
   web:
